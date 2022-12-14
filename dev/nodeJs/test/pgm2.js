@@ -7,17 +7,21 @@
 //     console.log(`Tu as ${age}!`);
 //     readline.close();
 // });
-
+console.log('Age?')
 process.stdin.on("data", data => {
     const dateUser = data.toString().split('/')
     if (dateUser.length === 1) {
-        process.stderr.write("error! entrer pas conforme\n")
+        process.stderr.write("error! entrer pas conforme\nAge?\n")
         return;
     }
     const date = findAge(dateUser);
-    process.stdout.write(date + "\n____________________________________\n")
+    process.stdout.write(date + "\n____________________________________\nVoulez vous continuez ? Y/N\n")
+    process.stdin.on("data", again => {
+       if (stop(again.toString().toUpperCase())) {
+           process.stdin.destroy();
+       }
+    })
 })
-
 
 function findAge(data) {
 
@@ -39,4 +43,8 @@ function findAge(data) {
             return year--;
         }
     }
+}
+
+function stop(s){
+    return (s === 'Y')
 }
