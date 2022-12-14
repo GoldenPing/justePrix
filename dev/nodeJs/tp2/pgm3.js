@@ -1,20 +1,29 @@
 const fs = require('fs-extra')
 const crypt = require('crypto')
-console.time('pgm')
-const parentDir = './res/'
-fs.mkdirsSync("./res/")
-for (let i = 0; i <= 500; i++) {
-    const str = crypt.createHash('sha256').update(i.toString()).digest('hex');
+//
+const image = fs.readFileSync("1.jpg", "base64")
+const binImage = Buffer.from(image, 'base64').toString('binary');
+fs.writeFileSync("image.jpg", binImage, "binary")
 
-    fs.mkdirs(parentDir + str, (onerror) => {
-        f(parentDir + str, str)
-    })
+const parentDir = './res/'
+const arr = [];
+for (let i = 0; i <= 500; i++) {
+    arr.push(i);
 }
-console.timeEnd('pgm')
+main(arr)
 
 async function f(dir, str) {
-    const promise1 = await fs.outputFile(dir + "/todo.txt", str)
-    const promise2 = await fs.copy("./1.jpg", dir + "/img.png");
+    // const promise1 = await fs.outputFile(dir + "/todo.txt", str)
+    // const promise2 = await fs.copy("./1.jpg", dir + "/img.png");
+    return Promise.all([fs.outputFile(dir + "/todo.txt", str), fs.copy("./image.jpg", dir + "/img.png")])
+}
 
-    Promise.all([promise1, promise2])
+async function main(arr) {
+    console.time('pgm')
+    await Promise.all(arr.map(async i => {
+        const str = crypt.createHash('sha256').update(i.toString()).digest('hex');
+        await fs.mkdirs(parentDir + str)
+        return f(parentDir + str, str)
+    }))
+    console.timeEnd('pgm')
 }
