@@ -4,8 +4,7 @@
   "description": "yolo",
   "main": "index.js",
   "scripts": {
-    "test": "yolo",
-    "start": "rm -r -f ./res/* && rm image.jpg && node pgm3.js"
+    "test": "yolo"
   },
   "repository": {
     "type": "git",
